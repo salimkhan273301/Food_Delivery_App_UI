@@ -1,0 +1,85 @@
+/* Navbar Styles */
+.navbar {
+  background-color: #f8f8f8;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand img {
+  height: 50px;
+}
+
+.navbar-nav {
+  list-style: none;
+  display: flex;
+}
+
+.navbar-nav li {
+  margin-right: 15px;
+}
+
+.navbar-nav li a {
+  color: #333;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.navbar-nav li a:hover {
+  color: #e6473f;
+}
+
+/* Container Styles */
+.container {
+  text-align: center;
+  margin-top: 10px;
+  min-height: calc(100vh - 150px);
+  display: flex;
+  flex-direction: column;
+  justify-content: top;
+  align-items: center;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+/* Footer Styles */
+.footer {
+  text-align: center;
+  padding: 10px;
+  background-color: #f8f8f8;
+  margin-top: auto;
+}
+
+/* Body Styles */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+  background-color: bisque;
+}
+.table-hover-color tbody tr:hover {
+  background-color: #0c795a;
+  color: white;
+}
+
+.btn {
+  margin-right: 5px;
+}
+#customers-table {
+  margin-bottom: 0px;
+}
+
+.btn-group {
+  display: flex;
+  justify-content: flex-start;
+  gap: 0px;
+}
+
+.btn-group button {
+  flex: 0 0 auto;
+}

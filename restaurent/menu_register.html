@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Menu Item Registration</title>
+    <link rel="stylesheet" href="/restaurent/menu_register.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Menu Item Registration</h1>
+      <form id="menu-item-form">
+        <div class="form-group">
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name" required />
+        </div>
+        <div class="form-group">
+          <label for="description">Description:</label>
+          <textarea id="description" name="description" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="price">Price:</label>
+          <input type="number" id="price" name="price" step="0.01" required />
+        </div>
+        <!-- <div class="form-group">
+          <label for="restaurant">Restaurant:</label>
+          <input type="text" id="restaurant" name="restaurant" required />
+        </div> -->
+        <div class="form-group">
+          <button type="submit">Register</button>
+        </div>
+      </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/restaurent/menu_register.js"></script>
+  </body>
+</html>

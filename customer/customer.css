@@ -62,3 +62,24 @@ body {
   margin: 0;
   background-color: bisque;
 }
+.pagination {
+  display: flex;
+  justify-content: flex-start; /* Align buttons to the left */
+  margin-top: 10px;
+}
+
+.pagination button {
+  padding: 5px 10px;
+  background-color: #f2f2f2;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  margin-right: 5px; /* Add margin between buttons */
+}
+
+.pagination button:last-child {
+  margin-right: 0; /* Remove margin for the last button */
+}
+
+.pagination button:hover {
+  background-color: #ddd;
+}

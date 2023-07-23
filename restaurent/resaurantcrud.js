@@ -30,7 +30,7 @@ $(document).ready(function () {
       success: function (response) {
         // Handle a successful registration response
         alert("Registration successful!");
-        window.location.href = "index.html";
+        window.location.href = "/home/index.html";
       },
       error: function (xhr, status, error) {
         // Handle a failed registration response

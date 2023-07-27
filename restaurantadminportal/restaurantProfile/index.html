@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Customer Portal</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+      crossorigin="anonymous"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        font-family: "Poppins", sans-serif;
+      }
+      /* Customize the navbar style */
+      .navbar {
+        background-color: #000;
+        color: #fff;
+      }
+      .navbar-brand {
+        color: #fff;
+      }
+      .nav-link {
+        color: #fff;
+      }
+      .nav-link:hover {
+        color: #f8f9fa;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a
+                href="/restaurantadminportal/"
+                class="nav-link active"
+                data-target="welcome-page"
+                >Home</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                href="/restaurantadminportal/addMenu/"
+                class="nav-link"
+                data-target="restaurants-page"
+                >Add Menu</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                href="/restaurantadminportal/restaurantProfile/"
+                class="nav-link"
+                data-target="profile-page"
+                >My Profile</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                href="/restaurantadminportal/myRestaurantOrders/"
+                class="nav-link"
+                data-target="orders-page"
+                >Order Status</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                href="/restaurantadminportal/menuinfo"
+                class="nav-link"
+                data-target="menus-page"
+                >My Menu</a
+              >
+            </li>
+            <!-- Logout Link -->
+            <li class="nav-item">
+              <a href="#" class="nav-link" id="logout-link">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-md-6 offset-md-3">
+          <div class="card">
+            <div class="card-header">
+              <h4 class="text-center">Restaurant Profile Information</h4>
+            </div>
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <label for="restaurantId">Restaurant ID</label>
+                <p id="restaurantId"></p>
+              </div>
+              <div class="d-flex justify-content-between">
+                <label for="restaurantName">Restaurant Name</label>
+                <p id="restaurantName"></p>
+              </div>
+              <div class="d-flex justify-content-between">
+                <label for="ownerName">Owner Name</label>
+                <p id="ownerName"></p>
+              </div>
+              <div class="d-flex justify-content-between">
+                <label for="ownerMobile">Owner Mobile Number</label>
+                <p id="ownerMobile"></p>
+              </div>
+              <div class="d-flex justify-content-between">
+                <label for="ownerEmail">Owner Email</label>
+                <p id="ownerEmail"></p>
+              </div>
+              <div class="d-flex justify-content-between">
+                <label for="ownerPassword">Owner Password</label>
+                <p id="ownerPassword"></p>
+              </div>
+              <div class="d-flex justify-content-between">
+                <label for="restaurantAddress">Restaurant Address</label>
+                <p id="restaurantAddress"></p>
+              </div>
+              <div class="d-flex justify-content-between">
+                <label for="pincode">Pincode</label>
+                <p id="pincode"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+      crossorigin="anonymous"
+    ></script>
+    <script src="/utils/navbar.js" defer></script>
+    <script src="./index.js" defer></script>
+  </body>
+</html>

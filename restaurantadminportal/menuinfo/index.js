@@ -21,41 +21,44 @@ function createMenuItemCard(item) {
 
 // Function to fetch menu item data from the server using AJAX
 function fetchMenuItems() {
-  $.ajax({
-    url:
-      "http://localhost:8080/api/menu-items/myrestaurent/" +
-      localStorage.getItem("restaurantId"),
-    type: "GET",
-    dataType: "json",
-    success: function (data) {
-      const menuContainer = $("#menu-container");
-      let row = $('<div class="row menu-row"></div>');
+  const onSuccess = (data) => {
+    const menuContainer = $("#menu-container");
+    let row = $('<div class="row menu-row"></div>');
 
-      data.forEach((item, index) => {
-        const card = createMenuItemCard(item);
-        row.append(card);
+    data.forEach((item, index) => {
+      const card = createMenuItemCard(item);
+      row.append(card);
 
-        if ((index + 1) % 3 === 0 || index === data.length - 1) {
-          // If index is a multiple of 3 or it's the last item, append the row to the container
-          menuContainer.append(row);
-          row = $('<div class="row"></div>'); // Start a new row
-        }
-      });
-    },
-    error: function (error) {
-      console.error("Error fetching menu items:", error);
-    },
-  });
+      if ((index + 1) % 3 === 0 || index === data.length - 1) {
+        // If index is a multiple of 3 or it's the last item, append the row to the container
+        menuContainer.append(row);
+        row = $('<div class="row"></div>'); // Start a new row
+      }
+    });
+  };
+
+  const onError = (xhr, status, error) => {
+    console.log(xhr.status);
+  };
+
+  ajaxService(
+    "/menu-items/myrestaurent/" + localStorage.getItem("restaurantId"),
+    "GET",
+    undefined,
+    onSuccess,
+    onError
+  );
 }
 
-// Call the fetchMenuItems function when the document is ready to populate the cards
 fetchMenuItems();
 
-// JavaScript functions for editing and deleting items (front-end demo purposes only)
-function editItem(itemId) {
-  alert("Edit Item " + itemId);
-}
-
 function deleteItem(itemId) {
-  alert("Delete Item " + itemId);
+  const onSuccess = (response) => {
+    alert("Delete Item " + itemId);
+  };
+  const onError = (xhr, status, error) => {
+    console.log(xhr.status, error);
+  };
+
+  ajaxService("/menu-items/" + itemId, "DELETE", undefined, onSuccess, onError);
 }

@@ -1,4 +1,3 @@
-const BASE_URL = "http://localhost:8080/api";
 const itemId = getItemIdFromUrl();
 
 if (itemId) {
@@ -15,51 +14,30 @@ $("#menu-item-form").submit(function (e) {
   }
 });
 
-function registerMenuItem() {
-  var name = $("#name").val();
-  var description = $("#description").val();
-  var price = $("#price").val();
-  var food_image_url = $("#foodImageUrl").val() || "./assets/chickenWings.jpg";
-  var restaurant = localStorage.getItem("restaurantId"); // Retrieve restaurant ID from localStorage
+function isMenuItemNotValid(menuItem) {
+  return (
+    menuItem.name === "" ||
+    menuItem.description === "" ||
+    menuItem.price === "" ||
+    menuItem.restaurant === null
+  );
+}
 
-  // Perform form validation
-  if (
-    name === "" ||
-    description === "" ||
-    price === "" ||
-    restaurant === null
-  ) {
+function registerMenuItem() {
+  const menuItem = getMenuItemFromForm();
+
+  if (isMenuItemNotValid(menuItem)) {
     $(".error").text("Please fill in all fields");
     return;
   }
 
-  // Create the menu item object
-  var menuItem = {
-    name: name,
-    description: description,
-    price: parseFloat(price),
-    restaurant: restaurant,
-    food_image_url,
+  const onSuccess = (response) => {
+    $("#menu-item-form").reset();
+    $(".error").text("");
+    window.location.href = "/restaurantadminportal/";
   };
 
-  // Send the menu item data to the server (replace tcohe URL with your API endpoint)
-  $.ajax({
-    url: `${BASE_URL}/menu-items`,
-    type: "POST",
-    contentType: "application/json",
-    data: JSON.stringify(menuItem),
-    success: function (response) {
-      //alert("Menu item registered successfully");
-      // Clear the form
-      $("#menu-item-form")[0].reset();
-      $(".error").text("");
-      // Redirect to the menu_list.html page after successful registration
-      window.location.href = "/restaurantadminportal/";
-    },
-    error: function (xhr, status, error) {
-      console.log("Error registering menu item:", error);
-    },
-  });
+  ajaxService("/menu-items", "POST", menuItem, onSuccess);
 }
 
 function getItemIdFromUrl() {
@@ -69,24 +47,23 @@ function getItemIdFromUrl() {
   return itemId;
 }
 
-function fetchItemToEditAndPopulateInform(itemId) {
-  $.ajax({
-    url: `${BASE_URL}/menu-items/${itemId}`,
-    type: "GET",
-    contentType: "application/json",
+function getMenuItemFromForm() {
+  return {
+    name: $("#name").val(),
+    description: $("#description").val(),
+    price: parseFloat($("#price").val()),
+    food_image_url: $("#foodImageUrl").val() || "./assets/chickenWings.jpg",
+    restaurant: localStorage.getItem("restaurantId"),
+  };
+}
 
-    success: function (response) {
-      console.log(response);
-      populateForm(response);
-    },
-    error: function (xhr, status, e) {
-      if (xhr.status === 404) {
-        console.error("Item not found.");
-      } else {
-        console.error("Error fetching item:", xhr.status, e);
-      }
-    },
-  });
+function fetchItemToEditAndPopulateInform(itemId) {
+  const onSuccess = (response) => {
+    console.log(response);
+    populateForm(response);
+  };
+
+  ajaxService(`/menu-items/${itemId}`, "GET", undefined, onSuccess);
 }
 
 function populateForm(data) {
@@ -109,25 +86,17 @@ function populateForm(data) {
 }
 
 function updateMenuItem() {
-  const updatedMenuItem = {
-    name: $("#name").val(),
-    description: $("#description").val(),
-    price: parseFloat($("#price").val()),
-    food_image_url: $("#foodImageUrl").val() || "./assets/chickenWings.jpg",
+  const updatedMenuItem = getMenuItemFromForm();
+
+  const onSuccess = (response) => {
+    console.log("Item updated successfully:", response);
+    window.location.href = "/restaurantadminportal/menuinfo/";
   };
 
-  $.ajax({
-    url: `${BASE_URL}/menu-items/updatemenu/${itemId}`,
-    type: "PUT",
-    data: JSON.stringify(updatedMenuItem),
-    contentType: "application/json",
-    success: function (data) {
-      console.log("Item updated successfully:", data);
-
-      window.location.href = "/restaurantadminportal/menuinfo/";
-    },
-    error: function (xhr, status, error) {
-      console.error("Error updating item:", error);
-    },
-  });
+  ajaxService(
+    `/menu-items/updatemenu/${itemId}`,
+    "PUT",
+    updatedMenuItem,
+    onSuccess
+  );
 }

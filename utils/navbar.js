@@ -1,16 +1,12 @@
-$(".nav-link").click(function () {
-  // Remove the 'active' class from all navbar links
-  $(".nav-link").removeClass("active");
+function logout() {
+  // Clear local storage data
+  localStorage.clear();
+  // Redirect to login page
+  window.location.href = "/login"; // Replace "/login" with the actual login page URL
+}
 
-  // Hide all sections
-  $(".container").hide();
-
-  // Get the target section from the data-target attribute
-  var target = $(this).attr("data-target");
-
-  // Show the target section
-  $("#" + target).show();
-
-  // Add the 'active' class to the clicked navbar link
-  $(this).addClass("active");
+// Bind click event to the Logout link
+$("#logout-link").click(function (e) {
+  e.preventDefault();
+  logout();
 });

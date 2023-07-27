@@ -4,6 +4,7 @@ function registerMenuItem() {
   var name = $("#name").val();
   var description = $("#description").val();
   var price = $("#price").val();
+  var food_image_url = $("#foodImageUrl").val() || "./assets/chickenWings.jpg";
   var restaurant = localStorage.getItem("restaurantId"); // Retrieve restaurant ID from localStorage
 
   // Perform form validation
@@ -23,11 +24,12 @@ function registerMenuItem() {
     description: description,
     price: parseFloat(price),
     restaurant: restaurant,
+    food_image_url,
   };
 
   // Send the menu item data to the server (replace the URL with your API endpoint)
   $.ajax({
-    url: "http://localhost:8080/menu-items",
+    url: "http://localhost:8080/api/menu-items",
     type: "POST",
     contentType: "application/json",
     data: JSON.stringify(menuItem),
@@ -54,7 +56,7 @@ function fetchAndDisplayMenuList() {
   if (restaurantId) {
     // Make an AJAX request to fetch the menu list
     $.ajax({
-      url: "http://localhost:8080/menu-items/myrestaurent/" + restaurantId,
+      url: "http://localhost:8080/api/menu-items/myrestaurent/" + restaurantId,
       type: "GET",
       success: function (response) {
         // Handle the successful response and populate the menu list

@@ -54,24 +54,7 @@ $(document).ready(function () {
   var restaurantIndex = 0;
   var orderIndex = 0;
   // Helper function to display restaurant rows based on pagination
-  function displayRestaurantRows(startIndex) {
-    var tableBody = $("#restaurant-table tbody");
-    tableBody.empty();
-
-    var endIndex = startIndex + 5;
-
-    for (var i = startIndex; i < endIndex && i < restaurantData.length; i++) {
-      var restaurant = restaurantData[i];
-      var row = "<tr>";
-      row += "<td>" + restaurant.restaurantId + "</td>";
-      row += "<td>" + restaurant.name + "</td>";
-      row += "<td>" + restaurant.address + "</td>";
-      row += "<td>" + restaurant.phoneNumber + "</td>";
-      row += "<td>" + restaurant.pincode + "</td>";
-      row += "</tr>";
-      tableBody.append(row);
-    }
-  }
+  f;
 
   // Fetch and display order data
   function fetchAndDisplayOrders(userId) {

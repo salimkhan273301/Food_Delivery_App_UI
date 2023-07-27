@@ -77,7 +77,7 @@ $(document).ready(function () {
                   );
 
                   // Redirect to customer page
-                  window.location.href = "/restaurent/restaurant_owner.html";
+                  window.location.href = "/restaurantadminportal/";
                 } else {
                   console.log("No restaurant found for the user");
                   // Handle no restaurant found for the user

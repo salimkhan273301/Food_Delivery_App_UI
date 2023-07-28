@@ -1,103 +1,90 @@
-$(document).ready(function () {
-  $("#login-form").submit(function (event) {
-    event.preventDefault();
+const CUSTOMER = "CUSTOMER";
+const ADMIN = "ADMIN";
+const RESTAURANT_OWNER = "RESTAURANT_OWNER";
 
-    var email = $("#email").val();
-    var password = $("#password").val();
-
-    // Make an AJAX request to the login endpoint
-    $.ajax({
-      url: "http://localhost:8080/api/login",
-      type: "POST",
-      data: {
-        email: email,
-        password: password,
-      },
-      success: function (response) {
-        // Handle a successful login response
-        if (response.responseCode === "success") {
-          var userType = response.userType;
-          var usermail = response.user.email;
-          var userId = response.user.userId;
-          // Assuming user ID is returned in the response
-          console.log(userId);
-
-          // Save the user ID and user type to local storage
-          localStorage.setItem("userId", userId);
-          localStorage.setItem("userType", userType);
-          localStorage.setItem("userEmail", usermail);
-
-          if (userType === "CUSTOMER") {
-            // Make an AJAX request to fetch customer data
-            $.ajax({
-              url: "http://localhost:8080/api/customers/user/" + userId,
-              type: "GET",
-              success: function (response) {
-                const customerdata = response[0];
-                // Store the customer ID and other relevant data in local storage
-                localStorage.setItem("customerId", customerdata.customerId);
-                localStorage.setItem("pincode", customerdata.pincode);
-                // ...
-
-                // Redirect to customer page
-                window.location.href = "/customerPortal";
-              },
-              error: function (xhr, status, error) {
-                // Handle error
-              },
-            });
-          } else if (userType === "ADMIN") {
-            // Make an AJAX request to fetch admin data
-            $.ajax({
-              url: "http://localhost:8080/api/admins/" + userId,
-              type: "GET",
-              success: function (adminData) {
-                // Store the admin ID and other relevant data in local storage
-                localStorage.setItem("adminId", adminData.adminId);
-                // ...
-
-                // Redirect to admin page
-                window.location.href = "/admin/admin.html";
-              },
-              error: function (xhr, status, error) {
-                // Handle error
-              },
-            });
-          } else if (userType === "RESTAURANT_OWNER") {
-            // Make an AJAX request to fetch restaurant owner data
-            $.ajax({
-              url: "http://localhost:8080/api/restaurants/user/" + userId,
-              type: "GET",
-              success: function (response) {
-                if (response.length > 0) {
-                  var restaurantOwnerData = response[0];
-                  localStorage.setItem(
-                    "restaurantId",
-                    restaurantOwnerData.restaurantId
-                  );
-
-                  // Redirect to customer page
-                  window.location.href = "/restaurantadminportal/";
-                } else {
-                  console.log("No restaurant found for the user");
-                  // Handle no restaurant found for the user
-                }
-              },
-              error: function (xhr, status, error) {
-                console.log("Error retrieving restaurant data:", error);
-                // Handle the error
-              },
-            });
-          }
-        } else {
-          // Handle login failure
-          $("#message").text("Invalid credentials").css("color", "red");
-        }
-      },
-      error: function (xhr, status, error) {
-        // Handle a failed login response
-        $("#message").text("Login failed").css("color", "red");
-      },
-    });
-  });
+$("#login-form").submit(function (event) {
+  event.preventDefault();
+  loginUser();
 });
+
+function loginUser() {
+  const email = $("#email").val();
+  const password = $("#password").val();
+
+  if (!email || !password) {
+    alert("Please enter email and password");
+    return;
+  }
+
+  const loginData = { email, password };
+  loginService(loginData);
+}
+
+function loginService(loginData) {
+  const onSuccess = (response) => {
+    var userType = response.userType;
+    var usermail = response.user.email;
+    var userId = response.user.userId;
+
+    localStorage.setItem("userId", userId);
+    localStorage.setItem("userType", userType);
+    localStorage.setItem("userEmail", usermail);
+
+    fetchAndRedirect(userType, userId);
+  };
+
+  ajaxService("/login", "POST", loginData, onSuccess);
+}
+
+function fetchAndRedirect(userType, userId) {
+  switch (userType) {
+    case ADMIN:
+      fetchAdminUserData(userId);
+      break;
+
+    case RESTAURANT_OWNER:
+      fetchRestaurantOwnerData(userId);
+      break;
+
+    case CUSTOMER:
+      fetchCustomerUserData(userId);
+      break;
+    default:
+      console.log(
+        userType + " user type does not exists in Khana Khao platform"
+      );
+  }
+}
+
+function fetchAdminUserData(userId) {
+  const onSuccess = (response) => {
+    localStorage.setItem("adminId", response.adminId);
+    window.location.href = "/admin/admin.html";
+  };
+
+  ajaxService("/admins" + userId, "GET", undefined, onSuccess);
+}
+
+function fetchRestaurantOwnerData(userId) {
+  const onSuccess = (response) => {
+    if (response.length > 0) {
+      var restaurantOwnerData = response[0];
+      localStorage.setItem("restaurantId", restaurantOwnerData.restaurantId);
+      window.location.href = "/restaurantadminportal/";
+    } else {
+      console.log("No restaurant found for the user");
+    }
+  };
+
+  ajaxService("/restaurants/user/" + userId, "GET", undefined, onSuccess);
+}
+
+function fetchCustomerUserData(userId) {
+  const onSuccess = (response) => {
+    const customerdata = response[0];
+    localStorage.setItem("customerId", customerdata.customerId);
+    localStorage.setItem("pincode", customerdata.pincode);
+    window.location.href = "/customerPortal";
+  };
+  ajaxService("/customers/user/" + userId, "GET", undefined, onSuccess);
+}

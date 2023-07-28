@@ -10,3 +10,9 @@ $("#logout-link").click(function (e) {
   e.preventDefault();
   logout();
 });
+
+const userId = localStorage.getItem("userId");
+
+if (!userId) {
+  window.location.href = "/login";
+}

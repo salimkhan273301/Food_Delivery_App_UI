@@ -32,7 +32,7 @@ function registerMenuItem() {
   }
 
   const onSuccess = (response) => {
-    $("#menu-item-form").reset();
+    $("#menu-item-form")[0].reset();
     $(".error").text("");
     window.location.href = "/restaurantadminportal/";
   };

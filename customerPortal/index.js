@@ -1,12 +1,43 @@
-const API_BASE_URL = "http://localhost:8080/api";
 const PINCODE = localStorage.getItem("pincode");
 let foodItems = [];
 
 fetchAllMenuItemsOfPincode(PINCODE);
 
+function fetchAllMenuItemsOfPincode(pincode) {
+  const OnSuccess = (response) => {
+    if (response.length === 0) {
+      $("#foodDisplayCounter").append(
+        '<p class="text-center">No item availble in your Location</p>'
+      );
+      console.log("No menu items found for this pincode.");
+    } else {
+      foodItems = response; // Store the fetched restaurant data
+      displayFoodItems(); // Display the first 4 rows
+    }
+  };
+
+  const OnError = (xhr, status, error) => {
+    console.log("Error fetching restaurant data:", error);
+    console.log(xhr.status);
+  };
+
+  ajaxService(
+    `/menu-items/bypincode/${pincode}`,
+    "GET",
+    undefined,
+    OnSuccess,
+    OnError
+  );
+}
+
 function displayFoodItems() {
   $("#foodDisplayCounter").empty();
 
+  populateMenuItemCards(foodItems);
+  registerClickEventOnOrderButton();
+}
+
+function populateMenuItemCards(foodItems) {
   foodItems.forEach((foodItem) => {
     console.log(foodItem);
     const card = `
@@ -33,61 +64,43 @@ function displayFoodItems() {
 
     $("#foodDisplayCounter").append(card);
   });
+}
+function getOrderData(itemId) {
+  const item = foodItems.find((item) => item.id == itemId);
 
-  $(".order-now-button").on("click", (event) => {
-    const itemId = $(event.target).data("id");
-    const item = foodItems.find((item) => item.id == itemId);
-
-    console.log(item);
-    const order = {
-      customer_id: Number(localStorage.getItem("customerId")),
-      restaurant_id: Number(item.restaurantId),
-      orderDate: new Date(),
-      status: "BOOKED",
-      totalAmount: item.price,
-      items: [
-        {
-          item_id: Number(item.id),
-          quantity: 1,
-          price: item.price,
-        },
-      ],
-    };
-
-    $.ajax({
-      url: `${API_BASE_URL}/orders/bookOrder`,
-      type: "POST",
-      contentType: "application/json",
-
-      data: JSON.stringify(order),
-      success: function (response) {
-        console.log(response);
+  console.log(item);
+  const order = {
+    customer_id: Number(localStorage.getItem("customerId")),
+    restaurant_id: Number(item.restaurantId),
+    orderDate: new Date(),
+    status: "BOOKED",
+    totalAmount: item.price,
+    items: [
+      {
+        item_id: Number(item.id),
+        quantity: 1,
+        price: item.price,
       },
-    });
-  });
+    ],
+  };
+  return order;
 }
 
-function fetchAllMenuItemsOfPincode(pincode) {
-  $.ajax({
-    url: `${API_BASE_URL}/menu-items/bypincode/${pincode}`,
-    success: function (response) {
-      if (response.length === 0) {
-        // If the response is empty, display a message to the user
-        $("#foodDisplayCounter").append(
-          `
-          <p class="text-center">No item availble in your Location</p>
-        `
-        );
-        console.log("No menu items found for this pincode.");
-      } else {
-        foodItems = response; // Store the fetched restaurant data
+function orderService(order) {
+  const onError = (xhr, status, error) => {
+    console.log(xhr.status, error);
+  };
+  const onSuccess = (response) => {
+    console.log(response);
+    window.location.href = "/customerPortal/orders/";
+  };
+  ajaxService("/orders/bookOrder", "POST", order, onSuccess, onError);
+}
 
-        displayFoodItems(); // Display the first 4 rows
-      }
-    },
-    error: function (xhr, status, error) {
-      console.log("Error fetching restaurant data:", error);
-      console.log(xhr.status);
-    },
+function registerClickEventOnOrderButton() {
+  $(".order-now-button").on("click", (event) => {
+    const itemId = $(event.target).data("id");
+    const order = getOrderData(itemId);
+    orderService(order);
   });
 }

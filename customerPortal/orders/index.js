@@ -5,11 +5,9 @@ $.ajax({
   method: "GET",
   dataType: "json",
   success: function (data) {
-    // Function to handle the successful response
     populateTable(data);
   },
   error: function (xhr, status, error) {
-    // Function to handle errors
     handleError(xhr, status, error);
   },
 });
@@ -28,29 +26,4 @@ function populateTable(orders) {
 
     tableBody.append(row);
   });
-}
-
-function formatDate(dateStr) {
-  const format = "YYYY-MM-DD HH:mm:ss";
-  const dateObj = new Date(dateStr);
-
-  const year = dateObj.getFullYear();
-  const month = padZero(dateObj.getMonth() + 1);
-  const day = padZero(dateObj.getDate());
-  const hours = padZero(dateObj.getHours());
-  const minutes = padZero(dateObj.getMinutes());
-  const seconds = padZero(dateObj.getSeconds());
-
-  // Replace the format placeholders with corresponding date components
-  return format
-    .replace("YYYY", year)
-    .replace("MM", month)
-    .replace("DD", day)
-    .replace("HH", hours)
-    .replace("mm", minutes)
-    .replace("ss", seconds);
-}
-
-function padZero(number) {
-  return number < 10 ? "0" + number : number;
 }

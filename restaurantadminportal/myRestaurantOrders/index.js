@@ -45,7 +45,7 @@ function populateTable(orders) {
       <button class="btn btn-info text-white  deliver" data-id="${
         order.orderId
       }"  ${isDeliverButtonDisabled(order.status) ? "disabled" : ""}  > ${
-        order.status === DELIVERED ? "Delivered" : "Delliver"
+        order.status === DELIVERED ? "Delivered" : "Deliver"
       } </button>
       <button class="btn btn-danger text-white  cancel" data-id="${
         order.orderId
@@ -110,12 +110,21 @@ function updateStatus(status, orderId) {
     data: JSON.stringify(status),
     type: "POST",
     contentType: "application/json",
-    success: function (data) {
-      console.log(data);
-      fetchOrders();
+    success: function (response) {
+      // Check if the response contains the success message
+      if (response === "Status updated successfully") {
+        // Display a success message
+        console.log("Status updated successfully");
+        // Fetch orders again to update the table with the new status
+        fetchOrders();
+      } else {
+        // Display the response message as it contains the error details
+        console.log("Status update failed: " + response);
+      }
     },
     error: function () {
-      console.log("something went wrong");
+      // Handle network or other errors
+      console.log("Something went wrong");
     },
   });
 }

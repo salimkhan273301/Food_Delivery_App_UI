@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Customer Portal</title>
+    <title>Admin Portal</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -41,22 +41,27 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link" aria-current="page" href="/customerPortal/"
-                >Home</a
-              >
+            <li class="nav-item active">
+              <a class="nav-link" aria-current="page" href="/admin/">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/customerPortal/availableRestaurant/">
-                Available Restaurants</a
-              >
+              <a class="nav-link" href="/admin/manageAdmin/"> Manage Admin</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/restaurants/"> Restaurants</a>
             </li>
 
-            <li class="nav-item active">
-              <a class="nav-link" href="/customerPortal/orders/">Orders</a>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/customers/">Customers</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/customerPortal/profile/">Profile</a>
+              <a class="nav-link" href="/admin/queries/">Query</a>
+            </li>
+            <li class="nav-item">
+              <a href="/admin/orders" class="nav-link">Order Status</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/profile/">Profile</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#" id="logout-link">Logout</a>
@@ -77,25 +82,6 @@
       </div>
     </nav>
 
-    <div class="container">
-      <h3 class="mt-4 mb-2">My Orders</h3>
-      <table id="order-table" class="table table-striped table-bordered">
-        <thead class="thead-light">
-          <tr>
-            <th>Order ID</th>
-            <th>Restaurant Name</th>
-            <th>Order Date</th>
-            <th>Menu Item</th>
-            <th>Total Amount</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Add code to dynamically populate the table rows with order data -->
-        </tbody>
-      </table>
-    </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script
@@ -103,7 +89,8 @@
       integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
       crossorigin="anonymous"
     ></script>
-    <script src="./index.js" defer></script>
     <script src="/utils/navbar.js" defer></script>
+    <script src="/utils/ajaxService.js"></script>
+    <script src="./index.js" defer></script>
   </body>
 </html>

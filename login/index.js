@@ -33,7 +33,7 @@ function loginService(loginData) {
     fetchAndRedirect(userType, userId);
   };
 
-  ajaxService("/login", "POST", loginData, onSuccess);
+  ajaxService("/login", "POST", loginData, onSuccess, () => {}, "#login-btn");
 }
 
 function fetchAndRedirect(userType, userId) {
@@ -59,10 +59,15 @@ function fetchAndRedirect(userType, userId) {
 function fetchAdminUserData(userId) {
   const onSuccess = (response) => {
     localStorage.setItem("adminId", response.adminId);
-    window.location.href = "/admin/admin.html";
+    window.location.href = "/admin/";
   };
 
-  ajaxService("/admins" + userId, "GET", undefined, onSuccess);
+  ajaxService(
+    "/admins/email/" + localStorage.getItem("userEmail"),
+    "GET",
+    undefined,
+    onSuccess
+  );
 }
 
 function fetchRestaurantOwnerData(userId) {
@@ -86,5 +91,12 @@ function fetchCustomerUserData(userId) {
     localStorage.setItem("pincode", customerdata.pincode);
     window.location.href = "/customerPortal";
   };
-  ajaxService("/customers/user/" + userId, "GET", undefined, onSuccess);
+  ajaxService(
+    "/customers/user/" + userId,
+    "GET",
+    undefined,
+    onSuccess,
+    () => {},
+    "login-btn"
+  );
 }

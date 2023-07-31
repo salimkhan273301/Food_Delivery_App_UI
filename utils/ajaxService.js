@@ -13,8 +13,11 @@ function ajaxService(
   type = "GET",
   data = undefined,
   onSuccess = dOnSuccess,
-  onError = dOnError
+  onError = dOnError,
+  button = undefined
 ) {
+  toggleDisable(button, true);
+
   $.ajax({
     url: BASE_URL + endpoint,
     type: type,
@@ -27,5 +30,19 @@ function ajaxService(
       console.log("Error:", error);
       onError(xhr, status, error);
     },
+    complete: function () {
+      toggleDisable(button, false);
+    },
   });
+}
+
+function toggleDisable(button, bool) {
+  if (button) {
+    $(button).prop("disabled", bool);
+    if (bool) {
+      $(button).addClass("disabled");
+    } else {
+      $(button).removeClass("disabled");
+    }
+  }
 }

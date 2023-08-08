@@ -11,6 +11,7 @@ function fetchCustomers() {
 
   ajaxService("/customers/all", "GET", undefined, success, error);
 }
+
 function populateTable(response) {
   // Clear existing table rows
   $("#customers-table tbody").empty();

@@ -8,12 +8,23 @@ const dOnError = (xhr, status, error) => {
   console.log("Something went wrong", error);
 };
 
+function ajaxServiceV2({
+  button,
+  endpoint,
+  type = "GET",
+  data,
+  onError = dOnError,
+  onSuccess = dOnSuccess,
+}) {
+  ajaxService(endpoint, type, data, onSuccess, onError, button);
+}
+
 function ajaxService(
   endpoint,
   type = "GET",
   data = undefined,
-  onSuccess = dOnSuccess,
-  onError = dOnError,
+  onSuccess,
+  onError,
   button = undefined
 ) {
   toggleDisable(button, true);

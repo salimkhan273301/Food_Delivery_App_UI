@@ -35,8 +35,13 @@ function ajaxService(
     contentType: "application/json",
     ...(data ? { data: JSON.stringify(data) } : {}),
     success: function (response) {
-      onSuccess(response);
+      if (typeof response === "object") {
+        onSuccess(response);
+      } else {
+        onSuccess({ message: response }); // Wrap the response in an object
+      }
     },
+
     error: function (xhr, status, error) {
       console.log("Error:", error);
       onError(xhr, status, error);

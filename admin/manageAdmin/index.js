@@ -1,4 +1,4 @@
-function fetchAdminProfile() {
+function fetchAdminTables() {
   const onSuccess = function (response) {
     console.log(response);
     populateTable(response);
@@ -9,6 +9,14 @@ function fetchAdminProfile() {
 
   ajaxServiceV2({ onError, endpoint: "/admins", onSuccess });
 }
+
+$("#registerAdmin").click(function (e) {
+  e.preventDefault();
+  $("#registrationModal").modal("show");
+  $("#registrationModalLabel").text("Register Admin");
+  $("#registerAdminBtn").text("register");
+  $("#registrationForm")[0].reset();
+});
 
 function populateTable(response) {
   // Clear existing table rows
@@ -27,15 +35,15 @@ function populateTable(response) {
         <td>${admin.password}</td>
         <td>
             <button class="btn btn-primary btn-sm view-admin-btn" data-admin-view="${admin.adminId}" onclick="viewadmin(${admin.adminId})"><i class="fas fa-eye"></i>View</button>
-            <button class="btn btn-info btn-sm edit-admin-btn" data-admin-edit="${admin.adminId}" onclick="editAdmin(${admin.adminId})"><i class="fas fa-edit"></i>Edit</button>
-            <button class="btn btn-danger btn-sm delete-admin-btn" data-admin-delete="${admin.adminId}" onclick="deleteadmin(${admin.adminId})"><i class="fas fa-trash-alt"></i> Delete</button>
+            <button class="btn btn-info text-white btn-sm edit-admin-btn" data-admin-edit="${admin.adminId}" onclick="editAdmin(${admin.adminId})"><i class="fas fa-edit"></i>Edit</button>
+            <button class="btn btn-danger btn-sm delete-admin-btn" data-admin-delete="${admin.adminId}"onclick="deleteAdmin(${admin.adminId}, this)"><i class="fas fa-trash-alt"></i> Delete</button>
         </td>
       </tr>`;
     $("#admins-table tbody").append(row);
   });
 }
 
-fetchAdminProfile();
+fetchAdminTables();
 
 function getDataFromRegistrationForm() {
   return {
@@ -47,15 +55,14 @@ function getDataFromRegistrationForm() {
   };
 }
 
-function registerAdmin() {
+function registerAdmin(data) {
   const onSuccess = function (response) {
     console.log(response);
+    fetchAdminTables();
   };
   const onError = function (xhr, status, error) {
     console.log(xhr.status, error);
   };
-
-  const data = getDataFromRegistrationForm();
 
   ajaxServiceV2({
     onSuccess,
@@ -63,18 +70,28 @@ function registerAdmin() {
     endpoint: "/admins/createAdmin",
     type: "POST",
     data,
+    button: "#registerAdminBtn",
   });
 }
 
 $("#registerAdminBtn").click(function (e) {
   e.preventDefault();
-  registerAdmin();
+  const adminId = $("#adminId").val();
+
+  const data = getDataFromRegistrationForm();
+  if (adminId) {
+    updateadmin(adminId, data);
+  } else {
+    registerAdmin(data);
+  }
 });
 
 function editAdmin(adminId) {
   const onSuccess = function (admin) {
     populateForm(admin);
-    $("#editModal").modal("show");
+    $("#registrationModal").modal("show");
+    $("#registrationModalLabel").text("Update Admin");
+    $("#registerAdminBtn").text("Update");
   };
   const onError = function (error) {
     console.error("Error fetching admin details:", error);
@@ -92,36 +109,21 @@ function editAdmin(adminId) {
 
 function populateForm(admin) {
   console.log(admin);
-  $("#editAdminId").val(admin.adminId);
-  $("#editName").val(admin.name);
-  $("#editMobileNumber").val(admin.phoneNumber);
-  $("#editAddress").val(admin.address);
-  $("#editEmail").val(admin.email);
-  $("#editPassword").val(admin.password);
+  $("#adminId").val(admin.adminId);
+  $("#name").val(admin.name);
+  $("#mobileNumber").val(admin.mobileNumber);
+  $("#address").val(admin.address);
+  $("#email").val(admin.email);
+  $("#password").val(admin.password);
   // Populate password field
 }
-
-$("#saveChanges").on("click", function (event) {
-  event.preventDefault();
-  const adminId = $("#editAdminId").val();
-  const updatedData = {
-    name: $("#editName").val(),
-    mobileNumber: $("#editMobileNumber").val(),
-    address: $("#editAddress").val(),
-    email: $("#editEmail").val(),
-    password: $("#editPassword").val(),
-  };
-
-  updateadmin(adminId, updatedData);
-  console.log(updatedData);
-});
 
 function updateadmin(adminId, updatedData) {
   const onSuccess = function (response) {
     console.log("admin with ID " + adminId + " updated successfully");
-    $("#editModal").modal("hide");
+    $("#registrationModal").modal("hide");
     // Refresh the table after updating the admin
-    fetchadmins();
+    fetchAdminTables();
   };
   const onError = function (error) {
     console.error("Error updating admin:", error);
@@ -135,4 +137,27 @@ function updateadmin(adminId, updatedData) {
     onError,
     "#saveChanges"
   );
+}
+
+//delete the admin
+function deleteAdmin(adminId, buttonElement) {
+  ajaxServiceV2({
+    endpoint: `/admins/${adminId}`,
+    type: "DELETE",
+    onSuccess: function (response) {
+      console.log(response);
+
+      // Find and fade out the row from the table
+      const rowElement = buttonElement.closest("tr");
+      if (rowElement) {
+        $(rowElement).fadeOut(1000, function () {
+          $(this).remove();
+          console.log("Row removed with fade-out effect.");
+        });
+      }
+    },
+    onError: function (xhr, status, error) {
+      console.log(xhr.status, error);
+    },
+  });
 }
